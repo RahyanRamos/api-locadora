@@ -12,6 +12,7 @@ namespace ApiLocadora
 
         public string Genero { get; set; }
 
+        [Column("ano_lancamento")]
         public DateOnly? AnoLancamento { get; set; }
     }
 }

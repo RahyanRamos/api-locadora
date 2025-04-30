@@ -1,12 +1,16 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-public class Filme
+namespace ApiLocadora.Models
 {
-    public int Id { get; set; }
-    public string Titulo { get; set; }
-    public string Genero { get; set; }
-    //public DateTime DataLancamento { get; set; }
-    //public string Diretor { get; set; }
-    //public string Sinopse { get; set; }
-    //public string ImagemUrl { get; set; }
+    [Table("filmes")]
+    public class Filme
+    {
+        public int Id { get; set; }
+
+        public string Nome { get; set; }
+
+        public string Genero { get; set; }
+
+        public DateOnly? AnoLancamento { get; set; }
+    }
 }

@@ -28,10 +28,12 @@ namespace ApiLocadora.Controllers
         [HttpPost]
         public async Task<IActionResult> Cadastrar([FromBody] FilmeDto item)
         {
+            var data = item.AnoLancamento;
             var filme = new Filme
             {
                 Nome = item.Nome,
-                Genero = item.Genero
+                Genero = item.Genero,
+                AnoLancamento = item.AnoLancamento
             };
 
             await _context.Filmes.AddAsync(filme);
