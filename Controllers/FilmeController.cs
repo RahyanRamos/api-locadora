@@ -33,7 +33,7 @@ namespace ApiLocadora.Controllers
             {
                 Nome = item.Nome,
                 Genero = item.Genero,
-                AnoLancamento = item.AnoLancamento
+                AnoLancamento = new DateOnly(data.Year, data.Month, data.Day)
             };
 
             await _context.Filmes.AddAsync(filme);
@@ -43,58 +43,54 @@ namespace ApiLocadora.Controllers
             return Created("", filme);
         }
 
-        //private static List<Filme> filmes = new List<Filme>();
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] FilmeDto item)
+        {
+            try
+            {
+                var filme = await _context.Filmes.FindAsync(id);
 
-        //public ActionResult<IEnumerable<Filme>> Get()
-        //{
-        //    return filmes;
-        //}
+                if(filme is null)
+                {
+                    return NotFound();
+                }
 
-        //[HttpGet("{id}")]
-        //public ActionResult<Filme> Get(Guid id)
-        //{
-        //    var filme = filmes.FirstOrDefault(f => f.Id == id);
-        //    if (filme == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return filme;
-        //}
+                filme.Nome = item.Nome;
+                filme.Genero = item.Genero;
+                filme.AnoLancamento = new DateOnly(item.AnoLancamento.Year, item.AnoLancamento.Month, item.AnoLancamento.Day);
 
-        //[HttpPost]
-        //public ActionResult<Filme> Post([FromBody] Filme filme)
-        //{
-        //    filme.Id = Guid.NewGuid();
-        //    filmes.Add(filme);
-        //    return CreatedAtAction(nameof(Get), new { id = filme.Id }, filme);
-        //}
+                _context.Filmes.Update(filme);
+                await _context.SaveChangesAsync();
 
-        //[HttpPut("{id}")]
-        //public IActionResult Put(Guid id, [FromBody] Filme filme)
-        //{
-        //    var filmeExistente = filmes.FirstOrDefault(f => f.Id == id);
-        //    if (filmeExistente == null)
-        //    {
-        //        return NotFound();
-        //    }
+                return Ok(filme);
+            }
+            catch(Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
 
-        //    filmeExistente.Nome = filme.Nome;
-        //    filmeExistente.Genero = filme.Genero;
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Remover(int id)
+        {
+            try
+            {
+                var filme = await _context.Filmes.FindAsync(id);
 
-        //    return NoContent();
-        //}
+                if(filme is null)
+                {
+                    return NotFound();
+                }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(Guid id)
-        //{
-        //    var filme = filmes.FirstOrDefault(f => f.Id == id);
-        //    if (filme == null)
-        //    {
-        //        return NotFound();
-        //    }
+                _context.Filmes.Remove(filme);
+                await _context.SaveChangesAsync();
 
-        //    filmes.Remove(filme);
-        //    return NoContent();
-        //}
+                return Ok();
+            }
+            catch(Exception e)
+            {
+                return Problem(e.Message);
+            }
+        }
     }
 }
